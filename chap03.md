@@ -1,13 +1,3 @@
----
-layout: post
-title: "[Ruby TDD] 루비 테스트 주도 개발 - Chap03"
-author: irene
-date: 2019-05-13 00:00
-tags: [ruby,tdd]
-image: /files/covers/tdd.png
-
----
-
 # 3장 모두를 위한 평등
 
 ### 객체 패턴 (value object pattern)

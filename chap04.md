@@ -28,7 +28,11 @@
   end
 ```
 
-amount 변수를 사용하는 코드가 `Dollar` 자신 밖에 없게 되었으므로 `private` 설정을 해줄 수 있다.
+amount 변수를 사용하는 코드가 `Dollar` 자신 밖에 없게 되었으므로 `private` 설정을 해줄 수 있다. 
+
+##### ruby issue
+
+루비를 사용할때 getter/setter 를 한번에 만들어줄 수 있는 `attr_access` 를 사용해줬는데, 알아서 `private` 처리가 된다고 한다 `.amount` 자체가 getter 메서드여서 가능했던듯. 
 
 ### 2. 실행 가능하게 만들기 
 
@@ -48,8 +52,6 @@ class Dollar
   def equals(object)
     amount == object.amount
   end
-
-  private :amount
 end
 ```
 
@@ -62,4 +64,4 @@ end
 
 ## Issue
 
-코드가 작동이 안된다.. `Dollar.new(5)` 시 객체 주소를 비교하고있다..하 
+코드가 작동이 안된다.. `Dollar.new(5)` 시 인스턴스 주소를 비교해서 에러가난다. getter 메서드를 사용하여 변경해줬다.
