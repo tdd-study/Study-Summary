@@ -23,7 +23,9 @@ Todo List 작성규칙은 다음과 같습니다.
 10.	Chapter05 - [~~5CHF * 2 = 10CHF~~](05.md)
 11.	Chapter08 - [~~Dollar/Franc 중복~~](08.md)
 12.	Chapter06 - [~~공용 equals~~](06.md)
-13.	공용 times
+13.	Chapter10 - [~~공용 times~~](10.md)
 14.	Chapter07 - [~~Franc와 Dollar 비교하기~~](07.md)
+15. Chapter09 - [~~통화?~~](09.md)
+16. testFrancMultiplication 제거
 
 ---
