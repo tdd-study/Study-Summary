@@ -9,13 +9,21 @@
 import XCTest
 @testable import TDD_Practice
 
-class Dollar {
-    var amount: Int
+class Money {
+    fileprivate var amount: Int
     
     init(_ amount: Int) {
         self.amount = amount
     }
-    
+}
+
+extension Money: Equatable {
+    static func == (lhs: Money, rhs: Money) -> Bool {
+        return lhs.amount == rhs.amount
+    }
+}
+
+class Dollar: Money {
     func times(_ multiplier: Int) -> Dollar {
         return Dollar(amount * multiplier)
     }
@@ -25,19 +33,7 @@ class Dollar {
     }
 }
 
-extension Dollar: Equatable {
-    static func == (lhs: Dollar, rhs: Dollar) -> Bool {
-        return lhs.amount == rhs.amount
-    }
-}
-
-class Franc {
-    var amount: Int
-    
-    init(_ amount: Int) {
-        self.amount = amount
-    }
-    
+class Franc: Money {
     func times(_ multiplier: Int) -> Franc {
         return Franc(amount * multiplier)
     }
@@ -46,14 +42,6 @@ class Franc {
         return amount == dollar.amount
     }
 }
-
-extension Franc: Equatable {
-    static func == (lhs: Franc, rhs: Franc) -> Bool {
-        return lhs.amount == rhs.amount
-    }
-}
-
-
 
 class TDD_PracticeTests: XCTestCase {
 
