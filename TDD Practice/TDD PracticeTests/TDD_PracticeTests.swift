@@ -19,11 +19,11 @@ class Money {
 
 extension Money: Equatable {
     static func == (lhs: Money, rhs: Money) -> Bool {
-        return lhs.amount == rhs.amount && type(of: lhs) == type(of: rhs)
+        return lhs.amount == rhs.amount
     }
     
     func equals(_ money: Money) -> Bool {
-        return amount == money.amount
+        return amount == money.amount && String(describing: self) == String(describing: money)
     }
 }
 
@@ -50,6 +50,7 @@ class TDD_PracticeTests: XCTestCase {
     func testEquality() {
         XCTAssertTrue(Dollar(5).equals(Dollar(5)))
         XCTAssertFalse(Dollar(5).equals(Dollar(6)))
+        XCTAssertTrue(Dollar(5).equals(Franc(5)))
     }
     
     func testFrancMultiplication() {
