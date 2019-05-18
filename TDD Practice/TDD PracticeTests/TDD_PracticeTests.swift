@@ -19,7 +19,11 @@ class Money {
 
 extension Money: Equatable {
     static func == (lhs: Money, rhs: Money) -> Bool {
-        return lhs.amount == rhs.amount
+        return lhs.amount == rhs.amount && type(of: lhs) == type(of: rhs)
+    }
+    
+    func equals(_ money: Money) -> Bool {
+        return amount == money.amount
     }
 }
 
@@ -27,19 +31,11 @@ class Dollar: Money {
     func times(_ multiplier: Int) -> Dollar {
         return Dollar(amount * multiplier)
     }
-    
-    func equals(_ dollar: Dollar) -> Bool {
-        return amount == dollar.amount
-    }
 }
 
 class Franc: Money {
     func times(_ multiplier: Int) -> Franc {
         return Franc(amount * multiplier)
-    }
-    
-    func equals(_ dollar: Franc) -> Bool {
-        return amount == dollar.amount
     }
 }
 
