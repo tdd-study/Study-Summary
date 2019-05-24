@@ -9,71 +9,70 @@
 import XCTest
 @testable import TDD_Practice
 
-protocol MoneyType {
-    func times(_ multiplier: Int) -> Money
-}
-
-class Money: MoneyType {
+class Money: Equatable {
     fileprivate var amount: Int
+    public var currency: String
     
-    init(_ amount: Int) {
+    init(_ amount: Int, currency: String) {
         self.amount = amount
+        self.currency = currency
     }
     
+    func times(_ by: Int) -> Money {
+        fatalError("Must Override")
+    }
+}
+
+extension Money {
     static func dollar(_ amount: Int) -> Money {
-        return Dollar(amount)
+        return Dollar(amount, currency: "USD")
     }
     
     static func franc(_ amount: Int) -> Money {
-        return Franc(amount)
-    }
-    
-    func times(_ multiplier: Int) -> Money {
-        return Money(amount * multiplier)
+        return Franc(amount, currency: "CHF")
     }
 }
 
-extension Money: Equatable {
-    static func == (lhs: Money, rhs: Money) -> Bool {
-        return lhs.amount == rhs.amount
-    }
-    
-    func equals(_ money: Money) -> Bool {
-        return amount == money.amount && String(describing: self) == String(describing: money)
-    }
+func == <T: Money>(lhs: T, rhs: T) -> Bool {
+    return lhs.amount == rhs.amount
+        && String(describing: lhs.self) == String(describing: rhs.self)
 }
 
 class Dollar: Money {
-    override func times(_ multiplier: Int) -> Money {
-        return Dollar(amount * multiplier)
+    override func times(_ by: Int) -> Money {
+        return Money.dollar(self.amount * by)
     }
 }
 
 class Franc: Money {
-    override func times(_ multiplier: Int) -> Money {
-        return Franc(amount * multiplier)
+    override func times(_ by: Int) -> Money {
+        return Money.franc(self.amount * by)
     }
 }
 
-class TDD_PracticeTests: XCTestCase {
-
+class DollarTests: XCTestCase {
     func testMultiplication() {
-        let five: Money = Money.dollar(5)
-        XCTAssertEqual(Money.dollar(10), five.times(2))
-        XCTAssertEqual(Money.dollar(15), five.times(3))
-    }
-    
-    func testEquality() {
-        XCTAssertTrue(Money.dollar(5).equals(Money.dollar(5)))
-        XCTAssertFalse(Money.dollar(5).equals(Money.dollar(6)))
-        XCTAssertTrue(Money.franc(5).equals(Money.franc(5)))
-        XCTAssertFalse(Money.franc(5).equals(Money.franc(6)))
-        XCTAssertFalse(Money.franc(5).equals(Money.dollar(5)))
+        let five = Money.dollar(5)
+        XCTAssertEqual(Money.dollar(5 * 2), five.times(2))
+        XCTAssertEqual(Money.dollar(5 * 3), five.times(3))
     }
     
     func testFrancMultiplication() {
-        let five: Money = Money.franc(5)
-        XCTAssertEqual(Money.franc(10), five.times(2))
-        XCTAssertEqual(Money.franc(15), five.times(3))
+        let five = Money.franc(5)
+        XCTAssertEqual(Money.franc(5 * 2), five.times(2))
+        XCTAssertEqual(Money.franc(5 * 3), five.times(3))
+    }
+    
+    func testEquality() {
+        XCTAssertEqual(Money.dollar(5), Money.dollar(5))
+        XCTAssertNotEqual(Money.dollar(5), Money.dollar(6))
+        XCTAssertEqual(Money.franc(5), Money.franc(5))
+        XCTAssertNotEqual(Money.franc(5), Money.franc(6))
+        XCTAssertNotEqual(Money.dollar(5), Money.franc(5))
+    }
+    
+    func testCurrency() {
+        XCTAssertEqual("USD", Money.dollar(1).currency);
+        XCTAssertEqual("CHF", Money.franc(1).currency);
     }
 }
