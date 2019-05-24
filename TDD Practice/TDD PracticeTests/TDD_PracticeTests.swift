@@ -25,29 +25,17 @@ class Money: Equatable {
 
 extension Money {
     static func dollar(_ amount: Int) -> Money {
-        return Dollar(amount, currency: "USD")
+        return Money(amount, currency: "USD")
     }
     
     static func franc(_ amount: Int) -> Money {
-        return Franc(amount, currency: "CHF")
+        return Money(amount, currency: "CHF")
     }
 }
 
 func == <T: Money>(lhs: T, rhs: T) -> Bool {
     return lhs.amount == rhs.amount
-        && String(describing: lhs.self) == String(describing: rhs.self)
-}
-
-class Dollar: Money {
-    override func times(_ by: Int) -> Money {
-        return Money.dollar(self.amount * by)
-    }
-}
-
-class Franc: Money {
-    override func times(_ by: Int) -> Money {
-        return Money.franc(self.amount * by)
-    }
+        && lhs.currency == rhs.currency
 }
 
 class DollarTests: XCTestCase {
@@ -67,12 +55,14 @@ class DollarTests: XCTestCase {
         XCTAssertEqual(Money.dollar(5), Money.dollar(5))
         XCTAssertNotEqual(Money.dollar(5), Money.dollar(6))
         XCTAssertEqual(Money.franc(5), Money.franc(5))
-        XCTAssertNotEqual(Money.franc(5), Money.franc(6))
-        XCTAssertNotEqual(Money.dollar(5), Money.franc(5))
     }
     
     func testCurrency() {
         XCTAssertEqual("USD", Money.dollar(1).currency);
         XCTAssertEqual("CHF", Money.franc(1).currency);
+    }
+    
+    func testDifferentClassEquality() {
+        XCTAssertTrue(Money(10, currency: "CHF") == Money(10, currency: "CHF"))
     }
 }
