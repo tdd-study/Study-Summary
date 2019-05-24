@@ -9,53 +9,60 @@
 import XCTest
 @testable import TDD_Practice
 
-class Money {
+class Money: Equatable {
     fileprivate var amount: Int
+    public var currency: String
     
-    init(_ amount: Int) {
+    init(_ amount: Int, currency: String) {
         self.amount = amount
-    }
-}
-
-extension Money: Equatable {
-    static func == (lhs: Money, rhs: Money) -> Bool {
-        return lhs.amount == rhs.amount
+        self.currency = currency
     }
     
-    func equals(_ money: Money) -> Bool {
-        return amount == money.amount && String(describing: self) == String(describing: money)
+    func times(_ by: Int) -> Money {
+        fatalError("Must Override")
     }
 }
 
-class Dollar: Money {
-    func times(_ multiplier: Int) -> Dollar {
-        return Dollar(amount * multiplier)
+extension Money {
+    static func dollar(_ amount: Int) -> Money {
+        return Money(amount, currency: "USD")
+    }
+    
+    static func franc(_ amount: Int) -> Money {
+        return Money(amount, currency: "CHF")
     }
 }
 
-class Franc: Money {
-    func times(_ multiplier: Int) -> Franc {
-        return Franc(amount * multiplier)
-    }
+func == <T: Money>(lhs: T, rhs: T) -> Bool {
+    return lhs.amount == rhs.amount
+        && lhs.currency == rhs.currency
 }
 
-class TDD_PracticeTests: XCTestCase {
-
+class DollarTests: XCTestCase {
     func testMultiplication() {
-        let five: Dollar = Dollar(5)
-        XCTAssertEqual(Dollar(10), five.times(2))
-        XCTAssertEqual(Dollar(15), five.times(3))
-    }
-    
-    func testEquality() {
-        XCTAssertTrue(Dollar(5).equals(Dollar(5)))
-        XCTAssertFalse(Dollar(5).equals(Dollar(6)))
-        XCTAssertTrue(Dollar(5).equals(Franc(5)))
+        let five = Money.dollar(5)
+        XCTAssertEqual(Money.dollar(5 * 2), five.times(2))
+        XCTAssertEqual(Money.dollar(5 * 3), five.times(3))
     }
     
     func testFrancMultiplication() {
-        let five: Franc = Franc(5)
-        XCTAssertEqual(Franc(10), five.times(2))
-        XCTAssertEqual(Franc(15), five.times(3))
+        let five = Money.franc(5)
+        XCTAssertEqual(Money.franc(5 * 2), five.times(2))
+        XCTAssertEqual(Money.franc(5 * 3), five.times(3))
+    }
+    
+    func testEquality() {
+        XCTAssertEqual(Money.dollar(5), Money.dollar(5))
+        XCTAssertNotEqual(Money.dollar(5), Money.dollar(6))
+        XCTAssertEqual(Money.franc(5), Money.franc(5))
+    }
+    
+    func testCurrency() {
+        XCTAssertEqual("USD", Money.dollar(1).currency);
+        XCTAssertEqual("CHF", Money.franc(1).currency);
+    }
+    
+    func testDifferentClassEquality() {
+        XCTAssertTrue(Money(10, currency: "CHF") == Money(10, currency: "CHF"))
     }
 }
