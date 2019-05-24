@@ -9,11 +9,27 @@
 import XCTest
 @testable import TDD_Practice
 
-class Money {
+protocol MoneyType {
+    func times(_ multiplier: Int) -> Money
+}
+
+class Money: MoneyType {
     fileprivate var amount: Int
     
     init(_ amount: Int) {
         self.amount = amount
+    }
+    
+    static func dollar(_ amount: Int) -> Money {
+        return Dollar(amount)
+    }
+    
+    static func franc(_ amount: Int) -> Money {
+        return Franc(amount)
+    }
+    
+    func times(_ multiplier: Int) -> Money {
+        return Money(amount * multiplier)
     }
 }
 
@@ -28,13 +44,13 @@ extension Money: Equatable {
 }
 
 class Dollar: Money {
-    func times(_ multiplier: Int) -> Dollar {
+    override func times(_ multiplier: Int) -> Money {
         return Dollar(amount * multiplier)
     }
 }
 
 class Franc: Money {
-    func times(_ multiplier: Int) -> Franc {
+    override func times(_ multiplier: Int) -> Money {
         return Franc(amount * multiplier)
     }
 }
@@ -42,20 +58,22 @@ class Franc: Money {
 class TDD_PracticeTests: XCTestCase {
 
     func testMultiplication() {
-        let five: Dollar = Dollar(5)
-        XCTAssertEqual(Dollar(10), five.times(2))
-        XCTAssertEqual(Dollar(15), five.times(3))
+        let five: Money = Money.dollar(5)
+        XCTAssertEqual(Money.dollar(10), five.times(2))
+        XCTAssertEqual(Money.dollar(15), five.times(3))
     }
     
     func testEquality() {
-        XCTAssertTrue(Dollar(5).equals(Dollar(5)))
-        XCTAssertFalse(Dollar(5).equals(Dollar(6)))
-        XCTAssertTrue(Dollar(5).equals(Franc(5)))
+        XCTAssertTrue(Money.dollar(5).equals(Money.dollar(5)))
+        XCTAssertFalse(Money.dollar(5).equals(Money.dollar(6)))
+        XCTAssertTrue(Money.franc(5).equals(Money.franc(5)))
+        XCTAssertFalse(Money.franc(5).equals(Money.franc(6)))
+        XCTAssertFalse(Money.franc(5).equals(Money.dollar(5)))
     }
     
     func testFrancMultiplication() {
-        let five: Franc = Franc(5)
-        XCTAssertEqual(Franc(10), five.times(2))
-        XCTAssertEqual(Franc(15), five.times(3))
+        let five: Money = Money.franc(5)
+        XCTAssertEqual(Money.franc(10), five.times(2))
+        XCTAssertEqual(Money.franc(15), five.times(3))
     }
 }
